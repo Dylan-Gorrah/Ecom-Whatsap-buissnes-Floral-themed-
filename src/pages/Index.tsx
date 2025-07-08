@@ -69,10 +69,12 @@ const Index = () => {
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Mouse Spotlight Effect */}
       <div 
-        className="fixed top-0 left-0 w-96 h-96 bg-gradient-radial from-white/5 via-white/2 to-transparent rounded-full pointer-events-none z-40 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-100 ease-out"
+        className="fixed top-0 left-0 w-[500px] h-[500px] pointer-events-none z-40 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-150 ease-out"
         style={{
           left: mousePosition.x,
           top: mousePosition.y,
+          background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.02) 60%, transparent 100%)',
+          filter: 'blur(1px)',
         }}
       />
       {/* Simple Header */}
@@ -101,7 +103,7 @@ const Index = () => {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroFloral})` }}
         >
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/35"></div>
         </div>
         <div className="relative z-10 text-center px-6 max-w-2xl">
           <h1 className="text-5xl md:text-7xl font-light text-white mb-6 tracking-wide">
