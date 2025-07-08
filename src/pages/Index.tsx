@@ -26,18 +26,50 @@ const products = [
 ];
 
 const Index = () => {
+  const playPingSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (error) {
+      console.log('Audio not supported');
+    }
+  };
+
+  const handleCreateYours = () => {
+    playPingSound();
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Simple Header */}
-      <header className="absolute top-0 left-0 right-0 z-50 p-6">
+      <header className="absolute top-0 left-0 right-0 z-50 p-6 animate-fade-in">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+          <div className="flex items-center space-x-3 group cursor-pointer">
+            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-white/30">
               <span className="text-white font-bold">F&F</span>
             </div>
-            <span className="text-white font-medium">Fern & Fern</span>
+            <span className="text-white font-medium transition-all duration-300 group-hover:text-white/80">Fern & Fern</span>
           </div>
-          <Button variant="outline" size="sm" className="bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground backdrop-blur-sm">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground backdrop-blur-sm transition-all duration-500 hover:scale-105"
+            onClick={() => document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' })}
+          >
             Contact
           </Button>
         </div>
@@ -62,8 +94,8 @@ const Index = () => {
           </p>
           <Button 
             size="lg" 
-            className="bg-white text-foreground hover:bg-white/90 px-12 py-4 text-lg font-medium rounded-full"
-            onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-white text-foreground hover:bg-white/90 px-12 py-4 text-lg font-medium rounded-full transition-all duration-500 hover:scale-110 hover:shadow-2xl transform"
+            onClick={handleCreateYours}
           >
             Create Yours
           </Button>
@@ -74,8 +106,12 @@ const Index = () => {
       <section id="products" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {products.map((product) => (
-              <Card key={product.id} className="group border-0 shadow-none bg-transparent overflow-hidden cursor-pointer">
+            {products.map((product, index) => (
+              <Card 
+                key={product.id} 
+                className="group border-0 shadow-none bg-transparent overflow-hidden cursor-pointer animate-fade-in hover:shadow-floral transition-all duration-700"
+                style={{ animationDelay: `${index * 200}ms` }}
+              >
                 <div className="relative overflow-hidden rounded-2xl">
                   <img 
                     src={product.image} 
@@ -84,17 +120,17 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="absolute bottom-6 left-6 right-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 opacity-0 group-hover:opacity-100">
-                    <h3 className="text-white text-xl font-medium mb-2">
+                    <h3 className="text-white text-xl font-medium mb-2 transition-all duration-300">
                       {product.name}
                     </h3>
-                    <p className="text-white/70 text-sm mb-3">
+                    <p className="text-white/70 text-sm mb-3 transition-all duration-300">
                       {product.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-white/90 text-lg">
+                      <span className="text-white/90 text-lg transition-all duration-300">
                         R{product.price}
                       </span>
-                      <Button size="sm" className="bg-white text-foreground hover:bg-white/90 rounded-full px-6">
+                      <Button size="sm" className="bg-white text-foreground hover:bg-white/90 rounded-full px-6 transition-all duration-300 hover:scale-105">
                         Customize
                       </Button>
                     </div>
