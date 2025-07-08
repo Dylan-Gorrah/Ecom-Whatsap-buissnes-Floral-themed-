@@ -11,27 +11,17 @@ import productPressed from "@/assets/product-pressed.jpg";
 const products = [
   {
     id: 1,
-    name: "Memory Box",
-    price: 89,
+    name: "Memory Boxes",
+    price: 1250,
     image: productCollageBox,
+    description: "Handcrafted wooden boxes filled with preserved flowers, photos, and cherished mementos"
   },
   {
     id: 2,
-    name: "Love Letter",
-    price: 45,
+    name: "Custom Letters",
+    price: 750,
     image: productLetter,
-  },
-  {
-    id: 3,
-    name: "Photo Frame",
-    price: 65,
-    image: productFrame,
-  },
-  {
-    id: 4,
-    name: "Pressed Flowers",
-    price: 75,
-    image: productPressed,
+    description: "Personalized pressed flower letters with your special message beautifully preserved"
   }
 ];
 
@@ -63,23 +53,27 @@ const Index = () => {
         </div>
         <div className="relative z-10 text-center px-6 max-w-2xl">
           <h1 className="text-5xl md:text-7xl font-light text-white mb-6 tracking-wide">
-            Preserve
+            Fern &
             <br />
-            <span className="font-medium">Memories</span>
+            <span className="font-medium">Fern</span>
           </h1>
-          <p className="text-xl text-white/80 mb-12 font-light">
+          <p className="text-xl text-white/60 mb-12 font-light">
             Handcrafted floral keepsakes
           </p>
-          <Button size="lg" className="bg-white text-foreground hover:bg-white/90 px-12 py-4 text-lg font-medium rounded-full">
+          <Button 
+            size="lg" 
+            className="bg-white text-foreground hover:bg-white/90 px-12 py-4 text-lg font-medium rounded-full"
+            onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
+          >
             Create Yours
           </Button>
         </div>
       </section>
 
       {/* Products Grid */}
-      <section className="py-24 px-6">
+      <section id="products" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {products.map((product) => (
               <Card key={product.id} className="group border-0 shadow-none bg-transparent overflow-hidden cursor-pointer">
                 <div className="relative overflow-hidden rounded-2xl">
@@ -93,9 +87,12 @@ const Index = () => {
                     <h3 className="text-white text-xl font-medium mb-2">
                       {product.name}
                     </h3>
+                    <p className="text-white/70 text-sm mb-3">
+                      {product.description}
+                    </p>
                     <div className="flex items-center justify-between">
                       <span className="text-white/90 text-lg">
-                        ${product.price}
+                        R{product.price}
                       </span>
                       <Button size="sm" className="bg-white text-foreground hover:bg-white/90 rounded-full px-6">
                         Customize
@@ -124,19 +121,33 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Minimal Footer */}
-      <footer className="py-12 px-6 border-t border-border/30">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-floral rounded-full flex items-center justify-center">
-              <span className="text-sm font-bold text-foreground">F&F</span>
+      {/* Contact Footer */}
+      <footer className="py-16 px-6 border-t border-border/30 bg-secondary/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-floral rounded-full flex items-center justify-center">
+                <span className="text-sm font-bold text-foreground">F&F</span>
+              </div>
+              <span className="text-foreground font-medium">Fern & Fern Creations</span>
             </div>
-            <span className="text-foreground font-medium">Fern & Fern Creations</span>
-          </div>
-          <div className="flex space-x-8 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Gallery</a>
-            <a href="#" className="hover:text-foreground transition-colors">Custom</a>
-            <a href="#" className="hover:text-foreground transition-colors">About</a>
+            
+            <div>
+              <h4 className="font-medium text-foreground mb-3">Contact</h4>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p>info@fernandfern.co.za</p>
+                <p>+27 82 123 4567</p>
+                <p>Cape Town, South Africa</p>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-foreground mb-3">Follow</h4>
+              <div className="flex space-x-4 text-sm text-muted-foreground">
+                <a href="#" className="hover:text-foreground transition-colors">Instagram</a>
+                <a href="#" className="hover:text-foreground transition-colors">WhatsApp</a>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
