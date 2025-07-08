@@ -65,7 +65,8 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-floral': 'var(--gradient-floral)',
-				'gradient-sage': 'var(--gradient-sage)'
+				'gradient-sage': 'var(--gradient-sage)',
+				'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))'
 			},
 			boxShadow: {
 				'soft': 'var(--shadow-soft)',

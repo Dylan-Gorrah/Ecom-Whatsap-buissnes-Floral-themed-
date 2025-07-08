@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Instagram } from "lucide-react";
 import heroFloral from "@/assets/hero-floral.jpg";
 import productCollageBox from "@/assets/product-collage-box.jpg";
 import productLetter from "@/assets/product-letter.jpg";
@@ -26,6 +27,17 @@ const products = [
 ];
 
 const Index = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   const playPingSound = () => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -54,7 +66,15 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Mouse Spotlight Effect */}
+      <div 
+        className="fixed top-0 left-0 w-96 h-96 bg-gradient-radial from-white/5 via-white/2 to-transparent rounded-full pointer-events-none z-40 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-100 ease-out"
+        style={{
+          left: mousePosition.x,
+          top: mousePosition.y,
+        }}
+      />
       {/* Simple Header */}
       <header className="absolute top-0 left-0 right-0 z-50 p-6 animate-fade-in">
         <div className="flex items-center justify-between">
@@ -142,21 +162,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Simple CTA */}
-      <section className="py-24 bg-gradient-floral">
-        <div className="text-center px-6">
-          <h2 className="text-4xl md:text-5xl font-light text-foreground mb-6">
-            Start Creating
-          </h2>
-          <p className="text-muted-foreground mb-12 text-lg">
-            Design your personalized keepsake today
-          </p>
-          <Button size="lg" className="bg-foreground text-background hover:bg-foreground/90 px-12 py-4 text-lg rounded-full">
-            Begin Journey
-          </Button>
-        </div>
-      </section>
-
       {/* Contact Footer */}
       <footer className="py-16 px-6 border-t border-border/30 bg-secondary/30">
         <div className="max-w-6xl mx-auto">
@@ -180,8 +185,15 @@ const Index = () => {
             <div>
               <h4 className="font-medium text-foreground mb-3">Follow</h4>
               <div className="flex space-x-4 text-sm text-muted-foreground">
-                <a href="#" className="hover:text-foreground transition-colors">Instagram</a>
-                <a href="#" className="hover:text-foreground transition-colors">WhatsApp</a>
+                <a 
+                  href="https://www.instagram.com/fenandferncreations?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 hover:text-foreground transition-colors"
+                >
+                  <Instagram size={16} />
+                  <span>Instagram</span>
+                </a>
               </div>
             </div>
           </div>
