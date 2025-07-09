@@ -44,35 +44,42 @@ const Index = () => {
       const masterGain = audioContext.createGain();
       masterGain.connect(audioContext.destination);
       
-      // Create multiple harmonic layers for ethereal effect
-      const frequencies = [1320, 1760, 2200, 2640]; // C6, A6, C#7, E7 - magical chord
-      const delays = [0, 0.1, 0.15, 0.25]; // Staggered timing
+      // Ascending star-like progression - billion dollar vibes
+      const progression = [
+        { freq: 440, delay: 0 },     // A4 - foundation
+        { freq: 660, delay: 0.12 },  // E5 - rising
+        { freq: 880, delay: 0.24 },  // A5 - building
+        { freq: 1320, delay: 0.36 }, // E6 - soaring
+        { freq: 1760, delay: 0.48 }  // A6 - triumphant peak
+      ];
       
-      frequencies.forEach((freq, index) => {
+      progression.forEach((note, index) => {
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
-        const delayNode = audioContext.createDelay();
         
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(freq * 0.9, audioContext.currentTime + 2);
+        oscillator.type = 'triangle'; // Warmer, more premium sound
+        oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.delay);
+        oscillator.frequency.exponentialRampToValueAtTime(note.freq * 1.02, audioContext.currentTime + note.delay + 1.2);
         
-        // Ethereal volume envelope with longer decay
-        const startTime = audioContext.currentTime + delays[index];
+        // Premium envelope - quick attack, sustained brilliance
+        const startTime = audioContext.currentTime + note.delay;
         gainNode.gain.setValueAtTime(0, startTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.15 / (index + 1), startTime + 0.05);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 2.5);
+        gainNode.gain.exponentialRampToValueAtTime(0.25, startTime + 0.02);
+        // Final note gets extra presence for that high-end finish
+        const sustainLevel = index === progression.length - 1 ? 0.3 : 0.15;
+        gainNode.gain.exponentialRampToValueAtTime(sustainLevel, startTime + 0.4);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 1.8);
         
         oscillator.connect(gainNode);
         gainNode.connect(masterGain);
         
         oscillator.start(startTime);
-        oscillator.stop(startTime + 2.5);
+        oscillator.stop(startTime + 1.8);
       });
       
-      // Master volume control
-      masterGain.gain.setValueAtTime(0.4, audioContext.currentTime);
-      masterGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 3);
+      // Master control with corporate confidence
+      masterGain.gain.setValueAtTime(0.5, audioContext.currentTime);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 2.5);
       
     } catch (error) {
       console.log('Audio not supported');
