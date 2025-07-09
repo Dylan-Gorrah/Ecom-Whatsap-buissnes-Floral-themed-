@@ -41,46 +41,24 @@ const Index = () => {
   const playPingSound = () => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const masterGain = audioContext.createGain();
-      masterGain.connect(audioContext.destination);
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
       
-      // Ascending star-like progression - billion dollar vibes
-      const progression = [
-        { freq: 440, delay: 0 },     // A4 - foundation
-        { freq: 660, delay: 0.12 },  // E5 - rising
-        { freq: 880, delay: 0.24 },  // A5 - building
-        { freq: 1320, delay: 0.36 }, // E6 - soaring
-        { freq: 1760, delay: 0.48 }  // A6 - triumphant peak
-      ];
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
       
-      progression.forEach((note, index) => {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.type = 'triangle'; // Warmer, more premium sound
-        oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.delay);
-        oscillator.frequency.exponentialRampToValueAtTime(note.freq * 1.02, audioContext.currentTime + note.delay + 1.2);
-        
-        // Premium envelope - quick attack, sustained brilliance
-        const startTime = audioContext.currentTime + note.delay;
-        gainNode.gain.setValueAtTime(0, startTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.25, startTime + 0.02);
-        // Final note gets extra presence for that high-end finish
-        const sustainLevel = index === progression.length - 1 ? 0.3 : 0.15;
-        gainNode.gain.exponentialRampToValueAtTime(sustainLevel, startTime + 0.4);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 1.8);
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(masterGain);
-        
-        oscillator.start(startTime);
-        oscillator.stop(startTime + 1.8);
-      });
+      // Quick zip sound - rapid frequency sweep
+      oscillator.type = 'sawtooth';
+      oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.15);
       
-      // Master control with corporate confidence
-      masterGain.gain.setValueAtTime(0.5, audioContext.currentTime);
-      masterGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 2.5);
+      // Sharp attack, quick decay for zip effect
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.4, audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.18);
       
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.18);
     } catch (error) {
       console.log('Audio not supported');
     }
