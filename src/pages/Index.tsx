@@ -41,24 +41,31 @@ const Index = () => {
   const playPingSound = () => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
       
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      // First tone - B note
+      const oscillator1 = audioContext.createOscillator();
+      const gainNode1 = audioContext.createGain();
+      oscillator1.type = 'square';
+      oscillator1.frequency.setValueAtTime(987.77, audioContext.currentTime); // B5
+      oscillator1.connect(gainNode1);
+      gainNode1.connect(audioContext.destination);
+      gainNode1.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode1.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+      oscillator1.start(audioContext.currentTime);
+      oscillator1.stop(audioContext.currentTime + 0.1);
       
-      // Quick zip sound - rapid frequency sweep
-      oscillator.type = 'sawtooth';
-      oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.15);
+      // Second tone - E note (higher)
+      const oscillator2 = audioContext.createOscillator();
+      const gainNode2 = audioContext.createGain();
+      oscillator2.type = 'square';
+      oscillator2.frequency.setValueAtTime(1318.51, audioContext.currentTime + 0.1); // E6
+      oscillator2.connect(gainNode2);
+      gainNode2.connect(audioContext.destination);
+      gainNode2.gain.setValueAtTime(0.3, audioContext.currentTime + 0.1);
+      gainNode2.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+      oscillator2.start(audioContext.currentTime + 0.1);
+      oscillator2.stop(audioContext.currentTime + 0.2);
       
-      // Sharp attack, quick decay for zip effect
-      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.4, audioContext.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.18);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.18);
     } catch (error) {
       console.log('Audio not supported');
     }
