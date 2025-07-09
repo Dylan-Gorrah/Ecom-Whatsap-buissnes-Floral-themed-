@@ -41,20 +41,30 @@ const Index = () => {
   const playPingSound = () => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
+      const oscillator1 = audioContext.createOscillator();
+      const oscillator2 = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
       
-      oscillator.connect(gainNode);
+      oscillator1.connect(gainNode);
+      oscillator2.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+      // Main chime frequency
+      oscillator1.frequency.setValueAtTime(1200, audioContext.currentTime);
+      oscillator1.frequency.exponentialRampToValueAtTime(1100, audioContext.currentTime + 0.8);
       
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      // Harmonic for richer chime sound
+      oscillator2.frequency.setValueAtTime(1800, audioContext.currentTime);
+      oscillator2.frequency.exponentialRampToValueAtTime(1650, audioContext.currentTime + 0.8);
       
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.5);
+      // Bell-like decay
+      gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.2);
+      
+      oscillator1.start(audioContext.currentTime);
+      oscillator1.stop(audioContext.currentTime + 1.2);
+      oscillator2.start(audioContext.currentTime);
+      oscillator2.stop(audioContext.currentTime + 1.2);
     } catch (error) {
       console.log('Audio not supported');
     }
