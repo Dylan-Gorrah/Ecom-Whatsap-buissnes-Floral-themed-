@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Instagram } from "lucide-react";
+import { Instagram, MessageCircle, ExternalLink } from "lucide-react";
 import heroFloral from "@/assets/hero-floral.jpg";
 import productCollageBox from "@/assets/product-collage-box.jpg";
 import productLetter from "@/assets/product-letter.jpg";
@@ -163,7 +163,7 @@ const Index = () => {
             
             <div>
               <h4 className="font-medium text-foreground mb-3">Follow</h4>
-              <div className="flex space-x-4 text-sm text-muted-foreground">
+              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                 <a 
                   href="https://www.instagram.com/fenandferncreations?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
                   target="_blank"
@@ -172,6 +172,24 @@ const Index = () => {
                 >
                   <Instagram size={16} />
                   <span>Instagram</span>
+                </a>
+                <a 
+                  href="https://www.facebook.com/share/16sXCx4BEx/?mibextid=wwXIfr" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 hover:text-foreground transition-colors"
+                >
+                  <ExternalLink size={16} />
+                  <span>Facebook</span>
+                </a>
+                <a 
+                  href="http://wa.me/27729670945" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 hover:text-foreground transition-colors"
+                >
+                  <MessageCircle size={16} />
+                  <span>WhatsApp</span>
                 </a>
               </div>
             </div>
