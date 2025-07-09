@@ -41,30 +41,42 @@ const Index = () => {
   const playPingSound = () => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const masterGain = audioContext.createGain();
+      masterGain.connect(audioContext.destination);
       
-      // First tone - B note
-      const oscillator1 = audioContext.createOscillator();
-      const gainNode1 = audioContext.createGain();
-      oscillator1.type = 'square';
-      oscillator1.frequency.setValueAtTime(987.77, audioContext.currentTime); // B5
-      oscillator1.connect(gainNode1);
-      gainNode1.connect(audioContext.destination);
-      gainNode1.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode1.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
-      oscillator1.start(audioContext.currentTime);
-      oscillator1.stop(audioContext.currentTime + 0.1);
+      // Dopamine-inducing chord progression: C-E-G-C (major triad with octave)
+      const notes = [
+        { freq: 523.25, delay: 0 },    // C5
+        { freq: 659.25, delay: 0.08 }, // E5  
+        { freq: 783.99, delay: 0.16 }, // G5
+        { freq: 1046.5, delay: 0.24 }  // C6 - satisfying high resolution
+      ];
       
-      // Second tone - E note (higher)
-      const oscillator2 = audioContext.createOscillator();
-      const gainNode2 = audioContext.createGain();
-      oscillator2.type = 'square';
-      oscillator2.frequency.setValueAtTime(1318.51, audioContext.currentTime + 0.1); // E6
-      oscillator2.connect(gainNode2);
-      gainNode2.connect(audioContext.destination);
-      gainNode2.gain.setValueAtTime(0.3, audioContext.currentTime + 0.1);
-      gainNode2.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
-      oscillator2.start(audioContext.currentTime + 0.1);
-      oscillator2.stop(audioContext.currentTime + 0.2);
+      notes.forEach((note, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        // Warm sine wave for pleasant, smooth sound
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.delay);
+        
+        // Satisfying envelope - quick attack, sustained pleasure, gentle decay
+        const startTime = audioContext.currentTime + note.delay;
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.25, startTime + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(0.2, startTime + 0.3);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 0.8);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(masterGain);
+        
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 0.8);
+      });
+      
+      // Master gain for that rewarding feel
+      masterGain.gain.setValueAtTime(0.6, audioContext.currentTime);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.2);
       
     } catch (error) {
       console.log('Audio not supported');
