@@ -41,30 +41,39 @@ const Index = () => {
   const playPingSound = () => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator1 = audioContext.createOscillator();
-      const oscillator2 = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      const masterGain = audioContext.createGain();
+      masterGain.connect(audioContext.destination);
       
-      oscillator1.connect(gainNode);
-      oscillator2.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      // Create multiple harmonic layers for ethereal effect
+      const frequencies = [1320, 1760, 2200, 2640]; // C6, A6, C#7, E7 - magical chord
+      const delays = [0, 0.1, 0.15, 0.25]; // Staggered timing
       
-      // Main chime frequency
-      oscillator1.frequency.setValueAtTime(1200, audioContext.currentTime);
-      oscillator1.frequency.exponentialRampToValueAtTime(1100, audioContext.currentTime + 0.8);
+      frequencies.forEach((freq, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        const delayNode = audioContext.createDelay();
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(freq * 0.9, audioContext.currentTime + 2);
+        
+        // Ethereal volume envelope with longer decay
+        const startTime = audioContext.currentTime + delays[index];
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.15 / (index + 1), startTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 2.5);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(masterGain);
+        
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 2.5);
+      });
       
-      // Harmonic for richer chime sound
-      oscillator2.frequency.setValueAtTime(1800, audioContext.currentTime);
-      oscillator2.frequency.exponentialRampToValueAtTime(1650, audioContext.currentTime + 0.8);
+      // Master volume control
+      masterGain.gain.setValueAtTime(0.4, audioContext.currentTime);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 3);
       
-      // Bell-like decay
-      gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.2);
-      
-      oscillator1.start(audioContext.currentTime);
-      oscillator1.stop(audioContext.currentTime + 1.2);
-      oscillator2.start(audioContext.currentTime);
-      oscillator2.stop(audioContext.currentTime + 1.2);
     } catch (error) {
       console.log('Audio not supported');
     }
