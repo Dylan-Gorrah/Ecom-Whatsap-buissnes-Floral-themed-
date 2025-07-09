@@ -38,53 +38,7 @@ const Index = () => {
     return () => document.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const playPingSound = () => {
-    try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const masterGain = audioContext.createGain();
-      masterGain.connect(audioContext.destination);
-      
-      // Dopamine-inducing chord progression: C-E-G-C (major triad with octave)
-      const notes = [
-        { freq: 523.25, delay: 0 },    // C5
-        { freq: 659.25, delay: 0.08 }, // E5  
-        { freq: 783.99, delay: 0.16 }, // G5
-        { freq: 1046.5, delay: 0.24 }  // C6 - satisfying high resolution
-      ];
-      
-      notes.forEach((note, index) => {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        // Warm sine wave for pleasant, smooth sound
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.delay);
-        
-        // Satisfying envelope - quick attack, sustained pleasure, gentle decay
-        const startTime = audioContext.currentTime + note.delay;
-        gainNode.gain.setValueAtTime(0, startTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.25, startTime + 0.02);
-        gainNode.gain.exponentialRampToValueAtTime(0.2, startTime + 0.3);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 0.8);
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(masterGain);
-        
-        oscillator.start(startTime);
-        oscillator.stop(startTime + 0.8);
-      });
-      
-      // Master gain for that rewarding feel
-      masterGain.gain.setValueAtTime(0.6, audioContext.currentTime);
-      masterGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.2);
-      
-    } catch (error) {
-      console.log('Audio not supported');
-    }
-  };
-
   const handleCreateYours = () => {
-    playPingSound();
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   };
 
